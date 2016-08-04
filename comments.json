@@ -1,0 +1,37 @@
+[
+    {
+        "id": 1,
+        "author": "Pete Hunt",
+        "text": "This is one comment and additional data."
+    },
+    {
+        "id": 2,
+        "author": "Jordan Brain",
+        "text": "This is *another* comment"
+    },
+    {
+        "id": 3,
+        "author": "Mike Walker",
+        "text": "This is comment again"
+    },
+    {
+        "id": 4,
+        "author": "Lion Orchid",
+        "text": "And this one also is a *comment*"
+    },
+    {
+        "id": 1470242292623,
+        "author": "Paulo Da Silva",
+        "text": "Halo everybody."
+    },
+    {
+        "id": 1470242359241,
+        "author": "Mika Zhuher",
+        "text": "I am typing some text to fill empty space. Actually I don't mean anything to say."
+    },
+    {
+        "id": 1470242766052,
+        "author": "Cornellia Mutti",
+        "text": "Figure out how everything works is a big deal!"
+    }
+]
