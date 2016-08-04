@@ -82,7 +82,10 @@ var ProductTable = React.createClass({
   render: function() {
     var rows = [];
     var lastCategory = null;
-    this.props.products.forEach(function(product){
+    this.props.products.forEach(product => {
+      if (product.name.indexOf(this.props.filterText) === -1 || (!product.stocked && this.props.inStockOnly)) {
+        return;
+      }
       if (product.category !== lastCategory) {
         rows.push(<ProductCategoryRow category={product.category} key={product.category} />);
       }
@@ -104,12 +107,29 @@ var ProductTable = React.createClass({
 });
 
 var SearchBar = React.createClass({
+  handleChange: function() {
+    this.props.onUserInput(
+      this.refs.filterTextInput.value,
+      this.refs.inStockOnlyInput.checked
+    );
+  },
   render: function() {
     return (
       <form>
-        <input type="text" placeholder="Search..." />
+        <input
+          type="text"
+          placeholder="Search..."
+          value={this.props.filterText}
+          ref="filterTextInput"
+          onChange={this.handleChange}
+        />
         <p>
-          <input type="checkbox" />
+          <input
+            type="checkbox"
+            checked={this.props.inStockOnly}
+            ref="inStockOnlyInput"
+            onChange={this.handleChange}
+          />
           {' '}
           Only show products in stock
         </p>
@@ -125,7 +145,11 @@ var FilterableProductTable = React.createClass({
       dataType: 'json',
       cache: false,
       success: function(data) {
-        this.setState({data: data});
+        this.setState({
+          data: data,
+          filterText: '',
+          inStockOnly: false
+        });
       }.bind(this),
       error: function(xhr, status, err) {
         console.error(this.props.url, status, err.toString());
@@ -133,17 +157,35 @@ var FilterableProductTable = React.createClass({
     });
   },
   getInitialState: function() {
-    return {data: []};
+    return {
+      data: [],
+      filterText: '',
+      inStockOnly: false
+    };
   },
   componentDidMount: function() {
     this.loadProductsFromServer();
     setInterval(this.loadProductsFromServer, this.props.pollInterval);
   },
+  handleUserInput: function(filterText, inStockOnly) {
+    this.setState({
+      filterText: filterText,
+      inStockOnly: inStockOnly
+    });
+  },
   render: function() {
     return (
       <div className="filterableProductTable">
-        <SearchBar />
-        <ProductTable products={this.state.data} />
+        <SearchBar
+          filterText={this.state.filterText}
+          inStockOnly={this.state.inStockOnly}
+          onUserInput={this.handleUserInput}
+        />
+        <ProductTable
+          products={this.state.data}
+          filterText={this.state.filterText}
+          inStockOnly={this.state.inStockOnly}
+        />
       </div>
     );
   }
